@@ -1,13 +1,82 @@
 <html>
   <head>
-    <title>Control PLC - V1.2.5</title>
+    <title>Control PLC - V1.3.0</title>
+    <!-- Fuente LongShot desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Long+Shot&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #000000;
+        color: #00CBD1;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        margin-bottom: 10px;
+      }
+      .logo {
+        width: 220px;
+        margin-bottom: 20px;
+      }
+      table {
+        margin: 0 auto;
+        border-spacing: 20px;
+      }
+      td {
+        vertical-align: top;
+        padding: 10px;
+        border: 2px solid #00CBD1;
+        border-radius: 10px;
+      }
+      h2 {
+        margin: 5px 0;
+      }
+      button {
+        background-color: #00CBD1;
+        color: #000000;
+        font-size: 18px;
+        padding: 12px 24px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      button:hover {
+        background-color: #0099A8;
+        color: #ffffff;
+      }
+      .estado {
+        font-size: 18px;
+        margin-top: 8px;
+      }
+    </style>
   </head>
   <body>
+    <img src="logo.png" alt="Logo Iprogo" class="logo">
     <h1>Control PLC (Versión V1.2.5)</h1>
-    <p>Estado actual del Bit0: <span id="estadoBit">Desconocido</span></p>
 
-    <button onclick="encenderBit()">Encender Bit</button>
-    <button onclick="apagarBit()">Apagar Bit</button>
+    
+    <!-- Tabla 4x2 para los bits -->
+    <table>
+      <tr>
+        <td id="bit0"></td>
+        <td id="bit4"></td>
+      </tr>
+      <tr>
+        <td id="bit1"></td>
+        <td id="bit5"></td>
+      </tr>
+      <tr>
+        <td id="bit2"></td>
+        <td id="bit6"></td>
+      </tr>
+      <tr>
+        <td id="bit3"></td>
+        <td id="bit7"></td>
+      </tr>
+    </table>
+
 
     <!-- Firebase SDK compat (versión 8.x) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -29,22 +98,30 @@
       // Inicializar Firebase (versión compat)
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
+      
+      // Generar controles dentro de la tabla
+      for (let i = 0; i < 8; i++) {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h2>Bit${i}</h2>
+          <button onclick="setBit(${i}, 'ON')">Encender</button>
+          <button onclick="setBit(${i}, 'OFF')">Apagar</button>
+          <div class="estado">Estado actual: <span id="estadoBit${i}">Desconocido</span></div>
+        `;
+        document.getElementById("bit" + i).appendChild(div);
 
-      // Funciones para escribir en la base
-      function encenderBit() {
-        db.ref("PLC/Bit0").set("ON");
+        // Suscripción a cambios en Firebase
+        db.ref("PLC/Bit" + i).on("value", (snapshot) => {
+          const estado = snapshot.val();
+          document.getElementById("estadoBit" + i).innerText = estado;
+        });
       }
 
-      function apagarBit() {
-        db.ref("PLC/Bit0").set("OFF");
+      // Función para escribir en Firebase
+      function setBit(bit, value) {
+        db.ref("PLC/Bit" + bit).set(value);
       }
-
-      // Suscripción para mostrar el estado en tiempo real
-      db.ref("PLC/Bit0").on("value", (snapshot) => {
-        const estado = snapshot.val();
-        document.getElementById("estadoBit").innerText = estado;
-        console.log("Valor actual de Bit0:", estado);
-      });
     </script>
   </body>
 </html>
+
