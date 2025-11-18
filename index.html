@@ -1,7 +1,37 @@
 <html>
-<body>
-  <h1>Control PLC</h1>
-  <button onclick="location.href='BitOn'">Encender Bit</button>
-  <button onclick="location.href='BitOff'">Apagar Bit</button>
-</body>
+  <body>
+    <h1>Control PLC</h1>
+    <button onclick="encenderBit()">Encender Bit</button>
+    <button onclick="apagarBit()">Apagar Bit</button>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+      // Configuración de tu proyecto (copiar de Firebase Console → Configuración del proyecto → tus apps web)
+      const firebaseConfig = {
+        apiKey: "AIzaSyDiqP5e_dP3VhHhR-SUaZWy25xboFTZzM8",
+        authDomain: "plccontrol-iprogo.firebaseapp.com",
+        databaseURL: "https://plccontrol-iprogo-default-rtdb.firebaseio.com",
+        projectId: "plccontrol-iprogo",
+        storageBucket: "plccontrol-iprogo.firebasestorage.app",
+        messagingSenderId: "229406808178",
+        appId: "1:229406808178:web:e4e1b17401213098424aeb",
+        measurementId: "G-21NH3MXMW8"
+      };
+
+      // Inicializar Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      function encenderBit() {
+        db.ref("PLC/Bit0").set("ON");
+      }
+
+      function apagarBit() {
+        db.ref("PLC/Bit0").set("OFF");
+      }
+    </script>
+  </body>
 </html>
+
+
