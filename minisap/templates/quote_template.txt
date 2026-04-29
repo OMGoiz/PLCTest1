@@ -1,0 +1,13 @@
+{company_name}
+Cotización: {quote_id}
+Fecha: {date}
+Cliente: {client_name}
+
+Detalle:
+{items_table}
+
+Subtotal: {subtotal}
+Impuestos: {tax}
+Total: {total}
+Validez: {validity_date}
+Notas: {notes}
