@@ -1,0 +1,16 @@
+{
+  "company_name": "MiniSAP Demo Company",
+  "tax_rate": 0.16,
+  "currency": "MXN",
+  "folio_prefix": "Q",
+  "last_folio_number": 0,
+  "file_paths": {
+    "clients": "data/clients.csv",
+    "products": "data/products.csv",
+    "quotes": "data/quotes.csv",
+    "quote_items": "data/quote_items.csv",
+    "pricing_rules": "data/pricing_rules.csv",
+    "quote_template": "templates/quote_template.txt",
+    "logs": "logs/app.log"
+  }
+}
