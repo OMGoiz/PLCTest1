@@ -1,0 +1,2 @@
+id,type,value,condition
+R001,percentage,5,quantity >= 10
