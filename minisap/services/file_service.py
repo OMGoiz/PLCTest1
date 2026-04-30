@@ -2,7 +2,11 @@ import csv
 import shutil
 from contextlib import contextmanager
 from pathlib import Path
-import fcntl
+
+try:
+    import fcntl  # Linux/macOS
+except ImportError:  # pragma: no cover - Windows path
+    fcntl = None
 
 
 class CSVFileService:
@@ -13,11 +17,13 @@ class CSVFileService:
     @contextmanager
     def _locked_file(self, path: Path, mode: str):
         with open(path, mode, newline="", encoding="utf-8") as f:
-            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+            if fcntl is not None:
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX)
             try:
                 yield f
             finally:
-                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+                if fcntl is not None:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
     def ensure_csv(self, rel_path: str, headers: list[str], seed_rows: list[dict] | None = None):
         full = self.base_dir / rel_path
